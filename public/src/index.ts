@@ -1,13 +1,17 @@
+/* eslint-disable no-new */
+/* eslint-disable no-param-reassign */
 import p5 from 'p5';
-const rendering = (p: p5) => {
-    p.setup = () => {
-        p.createCanvas(window.innerWidth, window.innerHeight);
-    }
+import Circles from './drawPeople';
 
-    p.draw = () => {
-        p.fill(0);
-        p.ellipse(p.mouseX, p.mouseY, 80, 80);
-    }
-}
+const rendering = (p: typeof p5) => {
+  p.setup = () => {
+    p.createCanvas(window.innerWidth, window.innerHeight);
+  };
 
+  p.draw = () => {
+    Circles(p, [[0, 0, 0, 0, 0], [0, 0.5, 0.5, 0.5, 0], [0, 1, 1, 1, 1]]);
+  };
+};
+
+// eslint-disable-next-line new-cap
 new p5(rendering);
