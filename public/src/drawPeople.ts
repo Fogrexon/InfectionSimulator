@@ -6,7 +6,8 @@ export default (p: p5, list: number[][]) => {
     column = list[0].length;
   const dy = p.height / row; const
     dx = p.width / column;
-  const r = Math.min(dy, dx) / 2;
+  const r = Math.min(dy, dx);
+  p.strokeWeight(0);
   for (let i = 0; i < row; i += 1) {
     for (let j = 0; j < column; j += 1) {
       if (isInfected(list[i][j])) p.fill(255, 0, 0);
