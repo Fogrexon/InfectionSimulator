@@ -1,11 +1,17 @@
 /* eslint-disable no-param-reassign */
-import { isInfected } from './utils';
+import { isInfected, isRecovered } from './utils';
 
 const revTime = 1 / 14;
 
 export default (list: number[][]) => {
   const row = list.length;
   const column = list[0].length;
+  const result: typeof list = [];
+  const stat = {
+    s: 0,
+    i: 0,
+    r: 0,
+  };
 
   const getType = (_x: number, _y: number) => {
     const x = (_x + column) % column;
@@ -14,8 +20,10 @@ export default (list: number[][]) => {
   };
 
   for (let i = 0; i < row; i += 1) {
+    result.push([]);
     for (let j = 0; j < column; j += 1) {
-      if (isInfected(list[i][j])) list[i][j] = Math.random() < 1/14 ? 1: 0.5;
+      let next;
+      if (isInfected(list[i][j])) next = Math.random() < 1 / 7 ? 1 : 0.5;
       else if (list[i][j] <= 0) {
         let infected = 0;
         for (let dy = -1; dy < 2; dy += 1) {
@@ -23,15 +31,29 @@ export default (list: number[][]) => {
             infected += isInfected(getType(j + dx, i + dy)) ? 1 : 0;
           }
         }
+        next = 0;
         for (let k = 0; k < infected; k += 1) {
-          if (Math.random() < 1.1398522810476 * 0.1) {
-            list[i][j] += revTime;
+          if (Math.random() < 0.2) {
+            next += revTime;
             break;
           }
         }
-      }
+      }else next = 1;
+
+      result[i].push(next);
     }
   }
+
+  for (let i = 0; i < row; i += 1) {
+    for (let j = 0; j < column; j += 1) {
+      list[i][j] = result[i][j];
+      if (isInfected(list[i][j])) stat.i += 1;
+      else if (isRecovered(list[i][j])) stat.r += 1;
+      else stat.s += 1;
+    }
+  }
+
+  return stat;
 };
 
 export const getInfected = (column: number, row: number): number[][] => {
