@@ -2,31 +2,35 @@
 /* eslint-disable no-param-reassign */
 import p5 from 'p5';
 import Circles from './drawPeople';
-import Simulation, { getInfected } from './infection';
+import { initialize, move } from './simulation';
+import { HumanStatus, Stat } from './types';
 
-let column = 100, row = 100;
+const num = 2000;
 
-let prevStat = {
-  s: row * column,
+let prevStat: Stat = {
+  s: num,
   i: 0,
   r: 0,
 };
-let stat = {
-  s: row * column,
+let stat: Stat = {
+  s: num,
   i: 0,
   r: 0,
 };
 let index = 0;
+const deltaIndex = 0.5;
 
 const rendering = (p: typeof p5) => {
-  let list: number[][];
+  let list: HumanStatus[];
   p.setup = () => {
     p.createCanvas(window.innerWidth, window.innerHeight);
-    list = getInfected(row, column);
+    list = initialize(p, num);
+    list[0].state = 0.5;
   };
 
   p.draw = () => {
-    stat = Simulation(list);
+    p.clear();
+    stat = move(p, list);
     Circles(p, list);
   };
 };
@@ -37,20 +41,17 @@ const renderGraph = (p: typeof p5) => {
   };
 
   p.draw = () => {
-    index += 2;
+    index += deltaIndex;
     p.strokeWeight(5);
-    p.stroke(0,0,255);
-    p.line(index - 2, (1 - prevStat.s / row / column) * p.height,
-      index, (1 - stat.s / row / column) * p.height,
-    );
-    p.stroke(255,0,0);
-    p.line(index - 2, (1 - prevStat.i / row / column) * p.height,
-      index, (1 - stat.i / row / column) * p.height,
-    );
-    p.stroke(0,255,0);
-    p.line(index - 2, (1 - prevStat.r / row / column) * p.height,
-      index, (1 - stat.r / row / column) * p.height,
-    );
+    p.stroke(0, 0, 255);
+    p.line(index - deltaIndex, (1 - prevStat.s / num) * p.height,
+      index, (1 - stat.s / num) * p.height);
+    p.stroke(255, 0, 0);
+    p.line(index - deltaIndex, (1 - prevStat.i / num) * p.height,
+      index, (1 - stat.i / num) * p.height);
+    p.stroke(0, 255, 0);
+    p.line(index - deltaIndex, (1 - prevStat.r / num) * p.height,
+      index, (1 - stat.r / num) * p.height);
     prevStat = stat;
   };
 };
