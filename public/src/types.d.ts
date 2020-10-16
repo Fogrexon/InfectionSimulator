@@ -11,3 +11,12 @@ export interface Stat {
   i: number
   r: number
 }
+
+export interface Parameters {
+  number: number
+  infect: number
+  recover: number
+  radius: number
+  speed: number
+  deltaIndex: number
+}
