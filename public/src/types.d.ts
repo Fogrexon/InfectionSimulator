@@ -19,4 +19,6 @@ export interface Parameters {
   radius: number
   speed: number
   deltaIndex: number
+  play: boolean
+  graph: boolean
 }

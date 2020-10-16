@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 /* eslint-disable no-param-reassign */
 import p5 from 'p5';
+import Tweakpane from 'tweakpane';
 import Circles from './drawPeople';
 import Simulation from './simulation';
 import { HumanStatus, Stat, Parameters } from './types';
+import addUI from './addUI';
 
 const params: Parameters = {
   number: 2000,
@@ -12,7 +14,10 @@ const params: Parameters = {
   radius: 1.5,
   speed: 60,
   deltaIndex: 1,
+  play: true,
+  graph: true,
 };
+
 let prevStat: Stat = {
   s: params.number,
   i: 0,
@@ -27,18 +32,30 @@ let prevI = 0;
 let index = 0;
 
 let human: HumanStatus[];
+let move: () => Stat;
+
+const pane = new Tweakpane();
 
 const rendering = (p: typeof p5) => {
-  let move: () => Stat;
   p.setup = () => {
     p.createCanvas(720, 480);
     const res = Simulation(p, params);
     move = res.move;
     human = res.human;
     human[0].state = 0.5;
+
+    addUI(params, pane, () => {
+      const ress = Simulation(p, params);
+      move = ress.move;
+      human = ress.human;
+      human[0].state = 0.5;
+      index = 0;
+      p.clear();
+    });
   };
 
   p.draw = () => {
+    if (!params.play) return;
     p.clear();
     stat = move();
     Circles(p, human, params);
@@ -49,9 +66,15 @@ const renderGraph = (p: typeof p5) => {
   p.setup = () => {
     p.createCanvas(720, 480);
     p.frameRate(10);
+    pane.addInput(params, 'graph').on('change', () => {
+      // eslint-disable-next-line no-param-reassign
+      p.canvas.style.opacity = String(params.graph ? 1 : 0);
+    });
   };
 
   p.draw = () => {
+    if (!params.play) return;
+    if (index === 0) p.clear();
     const num = human.length;
     index += params.deltaIndex;
     p.strokeWeight(2);

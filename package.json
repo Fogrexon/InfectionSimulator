@@ -18,7 +18,8 @@
   "homepage": "https://github.com/Fogrexon/InfectionSimulator#readme",
   "dependencies": {
     "p5": "^1.1.9",
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "tweakpane": "^1.5.5"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.4.0",
