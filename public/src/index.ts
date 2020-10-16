@@ -5,7 +5,7 @@ import Circles from './drawPeople';
 import { initialize, move } from './simulation';
 import { HumanStatus, Stat } from './types';
 
-const num = 2000;
+const num = 2500;
 
 let prevStat: Stat = {
   s: num,
@@ -18,7 +18,7 @@ let stat: Stat = {
   r: 0,
 };
 let index = 0;
-const deltaIndex = 0.5;
+const deltaIndex = 0.1;
 
 const rendering = (p: typeof p5) => {
   let list: HumanStatus[];
@@ -50,6 +50,9 @@ const renderGraph = (p: typeof p5) => {
     p.line(index - deltaIndex, (1 - prevStat.i / num) * p.height,
       index, (1 - stat.i / num) * p.height);
     p.stroke(0, 255, 0);
+    p.line(index - deltaIndex, (1 - prevStat.r / num) * p.height,
+      index, (1 - stat.r / num) * p.height);
+    p.stroke(0, 255, 255);
     p.line(index - deltaIndex, (1 - prevStat.r / num) * p.height,
       index, (1 - stat.r / num) * p.height);
     prevStat = stat;

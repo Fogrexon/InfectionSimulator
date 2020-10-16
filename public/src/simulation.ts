@@ -3,7 +3,7 @@ import p5 from 'p5';
 import { isInfected, isRecovered, isSusceptible } from './utils';
 import { HumanStatus, Stat } from './types';
 
-export const PLAYER_RADIUS = 5;
+export const PLAYER_RADIUS = 1.5;
 const PLAYER_RADIUS2 = PLAYER_RADIUS * PLAYER_RADIUS;
 
 export const initialize = (p: typeof p5, num: number) => {
@@ -73,7 +73,8 @@ export const move = (p: typeof p5, human: HumanStatus[]) => {
     human[i].x = (human[i].x + human[i].vx * p.deltaTime * 0.001 * 60 + p.width) % p.width;
     human[i].y = (human[i].y + human[i].vy * p.deltaTime * 0.001 * 60 + p.height) % p.height;
     if (isInfected(human[i].state)) {
-      human[i].state += 0.2 * p.deltaTime * 0.001;
+      // human[i].state += 0.2 * p.deltaTime * 0.001;
+      human[i].state = Math.random() < 0.2 * p.deltaTime * 0.001 ? 1 : 0.5;
       stat.i += 1;
     } else if (isRecovered(human[i].state)) stat.r += 1;
     else stat.s += 1;
