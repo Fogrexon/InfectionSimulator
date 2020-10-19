@@ -9,15 +9,50 @@
             z-index: 1000;
         }
         canvas {
-            height: 100vh;
+            z-index: -1000;
+            width: 10px;
+            margin: 0px;
+            padding: 0px;
+            display: block;
             position: absolute;
             top: 0px;
             left: 0px;
-            z-index: -1000;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        #container {
+            position:relative;
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+        #controller {
+            width: 500px;
+            position: absolute;
+            right: 0px;
+            top: 0px;
         }
     </style>
 </head>
 <body>
+    <h1>Infection Simulator</h1>
+    <ul>
+        <li>青: 未感染</li>
+        <li>赤: 感染</li>
+        <li>緑: 免疫保持者，隔離者</li>
+        <li>空色: 新規感染者(x30)</li>
+    </ul>
+    <div id="container">
+        <div id="wrapper">
+
+        </div>
+        <div id="controller">
+
+        </div>
+    </div>
     <script src="src/index.ts"></script>
 </body>
 </html>

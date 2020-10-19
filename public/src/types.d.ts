@@ -18,7 +18,7 @@ export interface Parameters {
   recover: number
   radius: number
   speed: number
-  deltaIndex: number
+  graphWidth: number
   play: boolean
   graph: boolean
 }
