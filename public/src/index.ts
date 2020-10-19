@@ -9,11 +9,11 @@ import addUI from './addUI';
 
 const params: Parameters = {
   number: 2000,
-  infect: 0.4,
-  recover: 1 / 5,
+  infect: 0.1,
+  recover: 0.1,
   radius: 1.5,
   speed: 60,
-  deltaIndex: 1,
+  graphWidth: 600,
   play: true,
   graph: true,
 };
@@ -34,11 +34,14 @@ let index = 0;
 let human: HumanStatus[];
 let move: () => Stat;
 
-const pane = new Tweakpane();
+const pane = new Tweakpane({
+  container: document.getElementById('controller'),
+});
 
 const rendering = (p: typeof p5) => {
   p.setup = () => {
-    p.createCanvas(720, 480);
+    const canvas = p.createCanvas(720, 480);
+    canvas.parent('wrapper');
     const res = Simulation(p, params);
     move = res.move;
     human = res.human;
@@ -64,11 +67,13 @@ const rendering = (p: typeof p5) => {
 
 const renderGraph = (p: typeof p5) => {
   p.setup = () => {
-    p.createCanvas(720, 480);
+    const canvas = p.createCanvas(720, 480);
+    canvas.parent('wrapper');
+    canvas.id('graph');
     p.frameRate(10);
-    pane.addInput(params, 'graph').on('change', () => {
+    pane.addInput(params, 'graph', { label: 'グラフ' }).on('change', () => {
       // eslint-disable-next-line no-param-reassign
-      p.canvas.style.opacity = String(params.graph ? 1 : 0);
+      p.canvas.style.display = params.graph ? 'block' : 'none';
     });
   };
 
@@ -76,21 +81,23 @@ const renderGraph = (p: typeof p5) => {
     if (!params.play) return;
     if (index === 0) p.clear();
     const num = human.length;
-    index += params.deltaIndex;
+    index += p.height / params.graphWidth;
     p.strokeWeight(2);
     p.stroke(0, 255, 255);
     p.line(
-      index - params.deltaIndex + 0.1, (1 - ((prevStat.i - prevI) * 30) / num) * p.height,
-      index + 0.1, (1 - ((stat.i - prevStat.i) * 30) / num) * p.height,
+      index - p.height / params.graphWidth + 0.1,
+      (1 - ((prevStat.i - prevI) * 30) / num) * p.height,
+      index + 0.1,
+      (1 - ((stat.i - prevStat.i) * 30) / num) * p.height,
     );
     p.stroke(0, 0, 255);
-    p.line(index - params.deltaIndex, (1 - prevStat.s / num) * p.height,
+    p.line(index - p.height / params.graphWidth, (1 - prevStat.s / num) * p.height,
       index, (1 - stat.s / num) * p.height);
     p.stroke(255, 0, 0);
-    p.line(index - params.deltaIndex, (1 - prevStat.i / num) * p.height,
+    p.line(index - p.height / params.graphWidth, (1 - prevStat.i / num) * p.height,
       index, (1 - stat.i / num) * p.height);
     p.stroke(0, 255, 0);
-    p.line(index - params.deltaIndex, (1 - prevStat.r / num) * p.height,
+    p.line(index - p.height / params.graphWidth, (1 - prevStat.r / num) * p.height,
       index, (1 - stat.r / num) * p.height);
     prevI = prevStat.i;
     prevStat = stat;
